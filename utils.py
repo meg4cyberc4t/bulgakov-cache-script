@@ -44,4 +44,3 @@ class SequenceLimit:
                 self.requests_finish_time.append(time.monotonic() + self.period)
             return res
         return wrapper
-    
