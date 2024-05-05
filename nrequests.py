@@ -1,5 +1,9 @@
 import aiohttp
- 
+ #
+# Copyright (c) 2024, Igor Molchanov.  Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
 # Returns the user's authorization token and id
 async def login(session: aiohttp.ClientSession, login: str, password: str) -> tuple[str, int]:
     data = {
