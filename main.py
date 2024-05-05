@@ -286,32 +286,32 @@ async def main():
     parser = build_options()
     options = parser.parse_args()
     
-    base_connector = aiohttp.TCPConnector(limit_per_host=10, limit=10)
-    async with aiohttp.ClientSession(
-        base_url="https://ithub.bulgakov.app/",
-        connector_owner=False,
-        connector=base_connector,
-    ) as session:
-        token, user_id = await login(session=session, credentials_file_path=options.credentials)
-        
-    async with aiohttp.ClientSession(
-        base_url="https://ithub.bulgakov.app/",
-        headers={'Authorization': f"Bearer {token}"},
-        connector_owner=False,
-        connector=base_connector
-    ) as session:
-        if options.subject is None:
-            subjects: list[int] = await get_list_of_subject_ids(session=session, token=token, user_id=user_id)
-        else:
-            subjects: list[int] = [options.subject]
+    with aiohttp.TCPConnector(limit_per_host=10, limit=10) as base_connector:
+        async with aiohttp.ClientSession(
+            base_url="https://ithub.bulgakov.app/",
+            connector_owner=False,
+            connector=base_connector,
+        ) as session:
+            token, user_id = await login(session=session, credentials_file_path=options.credentials)
             
-        reqs: list[Coroutine] = []
-        for subject_id in subjects:
-            reqs.append(download_subject(session=session, out_dir=options.out, subject_id=subject_id, mode=options.mode))
+        async with aiohttp.ClientSession(
+            base_url="https://ithub.bulgakov.app/",
+            headers={'Authorization': f"Bearer {token}"},
+            connector_owner=False,
+            connector=base_connector
+        ) as session:
+            if options.subject is None:
+                subjects: list[int] = await get_list_of_subject_ids(session=session, token=token, user_id=user_id)
+            else:
+                subjects: list[int] = [options.subject]
+                
+            reqs: list[Coroutine] = []
+            for subject_id in subjects:
+                reqs.append(download_subject(session=session, out_dir=options.out, subject_id=subject_id, mode=options.mode))
 
-        await asyncio.gather(*reqs)
-        base_connector.close()
-        return 0
+            await asyncio.gather(*reqs)
+            base_connector.close()
+            return 0
     
     
 if __name__ == '__main__':
