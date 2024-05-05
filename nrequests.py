@@ -28,7 +28,6 @@ async def subject(session: aiohttp.ClientSession, subject_id: int) -> dict:
     
 async def step(session: aiohttp.ClientSession, step_id: int) -> dict:
     async with session.get(f'/api/v2/lessons/{step_id}') as response:
-        print(await response.text())
         response_json = await response.json()
         if not response.ok:
             message = response_json['message']
