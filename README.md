@@ -2,6 +2,8 @@
 
 ### Downloading material from your lessons from LXP IThub.
 
+<img src=".example.png" alt="./main.py -m md -c input.json" />
+
 # Before using
 
 Step 1: Installing dependencies.
