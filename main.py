@@ -49,6 +49,12 @@ def build_options():
                         help="Topic output format.",
                         choices=['json', 'md'])
     
+    parser.add_argument('-d', '--domain', 
+                        type=str,
+                        help="The domain of your franchise.",
+                        default="ithub",
+                        choices=['ithub', 'vvsu', "rostov", "ekat", "caspian"])
+    
     parser.add_argument('--subject', 
                         type=int,
                         help="Id of the subject to be downloaded. If nothing is transmitted, content in all disciplines will be downloaded!")
@@ -288,14 +294,14 @@ async def main():
     
     with aiohttp.TCPConnector(limit_per_host=10, limit=10) as base_connector:
         async with aiohttp.ClientSession(
-            base_url="https://ithub.bulgakov.app/",
+            base_url=f"https://{options.domain}.bulgakov.app/",
             connector_owner=False,
             connector=base_connector,
         ) as session:
             token, user_id = await login(session=session, credentials_file_path=options.credentials)
             
         async with aiohttp.ClientSession(
-            base_url="https://ithub.bulgakov.app/",
+            base_url=f"https://{options.domain}.bulgakov.app/",
             headers={'Authorization': f"Bearer {token}"},
             connector_owner=False,
             connector=base_connector
